@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block head_title %}
+Detail of this container
+{% endblock head_title %}
+
+{% block content %}
+
+<div id='containers'>
+  Replace me
+</div>
+
+<div id='container_items'>
+
+</div>
+
+<script>
+    const containersEl = document.getElementById("containers")
+    containersEl.innerHTML = ''    
+
+    function formatContainerElement() {
+        var formattedContainer = "<div class='col-12 col-md-10 mx-auto py-3 mb-4 tweet border rounded' "
+
+        if("{{data.what}}" == "container"){
+                formattedContainer += "id='container-" + "{{data.id}}" + "'>" 
+        } else if("{{data.what}}" == "item"){
+                    formattedContainer += "id='item-" + "{{data.id}}" + "'>" 
+        }
+
+        formattedContainer += 
+                "<h3>" + "{{data.what}}" + " " + "{{data.id}}" + "</h3>" + 
+                "<p>" + "Name: " + "{{data.name}}" + "</p>" + 
+                "<p>" + "Color: " + "{{data.color}}" + "</p>" 
+
+        if("{{data.what}}" == "item"){
+            formattedContainer += "<p>" + "Category: " + "{{data.category}}" + "</p>" + 
+                "<p>" + "In Container: " + "{{data.in_container}}" + "</p>"
+        }
+
+        formattedContainer += 
+                "<p>" + "Length: " + "{{data.length}}" + "</p>" + 
+                "<p>" + "Width: " + "{{data.width}}" + "</p>" + 
+                "<p>" + "Height: " + "{{data.height}}" + "</p>" +
+                "<p>" + "Purpose: " + "{{data.purpose}}" + "</p>" +  
+                "<p>" + "Note: " + "{{data.note}}" + "</p>" + 
+
+                "</div>"
+
+        return formattedContainer
+    }
+    
+    containersEl.innerHTML = formatContainerElement()
+
+    function loadContainers(){
+        const containersEl = document.getElementById("container_items")
+        const xhr = new XMLHttpRequest()
+        const method = 'GET'
+        const url = "/items/in/" + "{{data.id}}"
+        const responseType = 'json'
+
+        xhr.responseType = responseType
+        xhr.open(method, url)
+        xhr.onload = function() {
+            const serverResponse = xhr.response
+            var listedItems = serverResponse.response
+            var finalStr = "<p>Related Items: </p>"
+            var i
+            for(i=0; i<listedItems.length; i++){ 
+                var containerObj = listedItems[i]
+                var currentItem = formatItemElement(containerObj) 
+                finalStr += currentItem
+            }
+            containersEl.innerHTML = finalStr
+        }
+        xhr.send()
+    }
+    if("{{data.what}}" == "container"){
+        loadContainers()
+    }
+
+    function formatItemElement(item) {
+        var formattedItem = "<div class='col-12 col-md-10 mx-auto py-3 mb-4 tweet border rounded' id='item-" + "{{data.id}}" + "'>" 
+
+        formattedItem += 
+                "<h5>" + "Item " + item.id + "</h5>" + 
+                "<p>" + "Name: " + item.name + "</p>" + 
+                "<p>" + "Color: " + item.color + "</p>" +
+                "<p>" + "Category: " + item.category + "</p>" + 
+                "<p>" + "Length: " + item.length + "</p>" + 
+                "<p>" + "Width: " + item.width + "</p>" + 
+                "<p>" + "Height: " + item.height + "</p>" +
+                "<p>" + "Purpose: " + item.purpose + "</p>" +  
+                "<p>" + "Note: " + item.note + "</p>" + 
+                "</div>"
+
+
+        return formattedItem
+    }
+
+</script>
+{% endblock content %}

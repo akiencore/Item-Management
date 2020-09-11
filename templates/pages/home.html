@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block head_title %}
+Home
+{% endblock head_title %}
+
+{% block content %}
+
+<div id='switch_to_items' class='row mb-3'>
+  <div class='col-md-14 mx-auto col-10'>
+      {% csrf_token %}
+      <button onclick=loadContainers("/items") type='submit' class='btn btn-primary'>Show Items</button>
+    </form>
+  </div>
+</div>
+
+<div id='switch_to_items' class='row mb-3'>
+  <div class='col-md-14 mx-auto col-10'>
+      {% csrf_token %}
+      <button onclick=loadContainers("/containers")  type='submit' class='btn btn-primary'>Show Containers</button>
+    </form>
+  </div>
+</div>
+
+<div id='welcome' class='row text-center'>
+    <div class='col'>
+        <h1>Welcome to Item Management</h1>
+    </div>
+</div>
+
+<div class='row mb-3'>
+  <div class='col-md-14 mx-auto col-10'>
+    <form class='form' method='POST' action='/create-container'>
+      {% csrf_token %}
+      <button type='submit' class='btn btn-primary'>Add a new container</button>
+    </form>
+  </div>
+</div>
+
+<div class='row mb-3'>
+  <div class='col-md-14 mx-auto col-10'>
+    <form class='form' method='POST' action='/create-item'>
+      {% csrf_token %}
+      <button type='submit' class='btn btn-primary'>Add a new item</button>
+    </form>
+  </div>
+</div>
+
+<div id='containers'>
+  Replace me
+</div>
+
+<script>
+    const containersEl = document.getElementById("containers")
+    containersEl.innerHTML = 'Loading...'
+
+    function loadContainers(what_to_load){
+        const containersEl = document.getElementById("containers")
+
+        const xhr = new XMLHttpRequest()
+        const method = 'GET'
+        const url = what_to_load
+        const responseType = 'json'
+
+        xhr.responseType = responseType
+        xhr.open(method, url)
+        xhr.onload = function() {
+            const serverResponse = xhr.response
+            var listedItems = serverResponse.response
+            var finalStr = ""
+            var i
+            for(i=0; i<listedItems.length; i++){ 
+                var containerObj = listedItems[i]
+                var currentItem = formatContainerElement(containerObj, what_to_load) 
+                finalStr += currentItem
+            }
+            containersEl.innerHTML = finalStr
+        }
+        xhr.send()
+    }
+    loadContainers("/containers")
+
+    function formatContainerElement(container, what_to_load) {
+
+        if(what_to_load == "/containers"){
+            what_to_load = "Container"
+        } else if(what_to_load == "/items"){
+            what_to_load = "Item"
+        } 
+
+        var formattedContainer = 
+                "<div class='col-12 col-md-10 mx-auto py-3 mb-4 tweet border rounded' id='container-" + container.id + "'>" + 
+                "<h3>" + what_to_load + " " + container.id + "</h3>" + 
+                "<p>" + container.color  + " " + container.name + "</p>"
+        if(what_to_load == "Item"){
+            formattedContainer += "<p>" + "  in_container " + container.in_container + "</p></div>"
+        } else {
+            formattedContainer += "</div>"
+        }
+
+        return formattedContainer
+    }
+
+    
+</script>
+{% endblock content %}

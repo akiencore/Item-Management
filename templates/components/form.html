@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block head_title %}
+Create {{what}}
+{% endblock head_title %}
+
+{% block content %}
+
+<form method="POST">
+  {% csrf_token %} {{ form.as_p }}
+  <input type='hidden' value='/' name='next' />
+  <button type="submit" class="btn btn-secondary">Save</button>
+</form>
+
+{% endblock content %}
