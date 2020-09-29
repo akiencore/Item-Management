@@ -6,9 +6,9 @@ Both items and containers have different ids and attributes to show differences 
 Also, this application supports related search on containers to see a container has what kind of items. 
 
 ## Environment settings:
-• Programming Language: Python, JavaScript
-• Operating System: Linux
-• Software Framework: Django (> 2.2)
+Programming Language: Python, JavaScript
+Operating System: Linux
+Software Framework: Django (> 2.2)
 
 
 ## How to setup
