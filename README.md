@@ -1,4 +1,6 @@
 # Item-Management Application
+An alpha version that totally originated by myself, and it tests some Django techniques. 
+
 The purpose of this project is to manage items based on containers that users added. 
 (Based on Django) 
 
